@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Projects{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Project Tracker</h1>
+    <p class="page-sub">Manage all active and upcoming projects</p>
+  </div>
+  <button class="btn-primary" onclick="openProjectModal()">+ New Project</button>
+</div>
+
+<div class="toolbar">
+  <div class="filter-group">
+    <label class="filter-label">Filter by Status:</label>
+    <select id="filter-status" class="form-select" onchange="renderProjects()">
+      <option value="">All Statuses</option>
+      <option>Not Started</option><option>In Progress</option>
+      <option>On Hold</option><option>Completed</option><option>Cancelled</option>
+    </select>
+  </div>
+  <div class="filter-group">
+    <label class="filter-label">Sort by:</label>
+    <select id="sort-col" class="form-select" onchange="renderProjects()">
+      <option value="deadline">Deadline</option>
+      <option value="status">Status</option>
+      <option value="name">Name</option>
+      <option value="budget">Budget</option>
+    </select>
+  </div>
+</div>
+
+<div class="table-wrap">
+  <table class="data-table" id="proj-table">
+    <thead>
+      <tr>
+        <th>Project Name</th><th>Client</th><th>Status</th>
+        <th>Start</th><th>Deadline</th><th>Budget (USD)</th>
+        <th>Lead</th><th>Progress</th><th>Actions</th>
+      </tr>
+    </thead>
+    <tbody id="proj-body"></tbody>
+  </table>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="project-modal" style="display:none">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title" id="proj-modal-title">New Project</h2>
+      <button class="modal-close" onclick="closeProjectModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="proj-id"/>
+      <div class="form-grid">
+        <di

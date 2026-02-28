@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% block title %}Partners & Suppliers{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Partner & Supplier Directory</h1>
+    <p class="page-sub">Searchable database of technology partners, OEMs, and suppliers</p>
+  </div>
+  <button class="btn-primary" onclick="openPartnerModal()">+ Add Entry</button>
+</div>
+
+<div class="toolbar">
+  <div class="search-wrap">
+    <input type="text" id="search-input" class="form-input search-input" placeholder="Search by company or capabilities…" oninput="renderPartners()"/>
+  </div>
+  <div class="filter-group">
+    <label class="filter-label">Type:</label>
+    <select id="filter-type" class="form-select" onchange="renderPartners()">
+      <option value="">All Types</option>
+      <option>Partner</option><option>Supplier</option><option>OEM</option>
+    </select>
+  </div>
+  <div class="filter-group">
+    <label class="filter-label">Country:</label>
+    <select id="filter-country" class="form-select" onchange="renderPartners()">
+      <option value="">All Countries</option>
+    </select>
+  </div>
+</div>
+
+<div class="table-wrap">
+  <table class="data-table" id="part-table">
+    <thead>
+      <tr>
+        <th>Company</th><th>Contact</th><th>Email</th><th>Phone</th>
+        <th>Country</th><th>Type</th><th>Capabilities</th><th>Lead Time</th><th>Notes</th><th>Actions</th>
+      </tr>
+    </thead>
+    <tbody id="part-body"></tbody>
+  </table>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="partner-modal" style="display:none">
+  <div class="modal modal-lg">
+    <div class="modal-header">
+      <h2 class="modal-title" id="part-modal-title">New Partner / Supplier</h2>
+      <button class="modal-close" onclick="closePartnerModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="part-id"/>
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Company Name *</label>
+          <input type="text" id="part-company" class="form-input"/>
+          <span class="field-error" id="err-part-company"></span>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Contact Person *</label>
+          <input type="text" id="part-contact" class="form-input"/>
+          <span class="field-error" id="err-part-contact"></span>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email *</label>
+          <input type="email" id="part-email" class="form-input"/>
+          <span class="field-error" id="err-part-email"></span>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Phone</label>
+          <input type="text" id="part-phone" class="form-input"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Country *</label>
+          <input type="text" id="part-country" class="form-input"/>
+          <span class="field-error" id="err-part-country"></span>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Type *</label>
+          <select id="part-type" class="form-select">
+            <option>Partner</option><option>Supplier</option><option>OEM</option>
+          </select>
+        </div>
+        <div class="form-group form-full">
+          <label class="form-label">Capabilities *</label>
+          <input type="text" id="part-capabilities" class="form-input" placeholder="e.g. Servers, Networking, Cloud"/>
+          <span class="field-error" id="err-part-capabilities"></span>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Lead Time</label>
+          <input type="text" id="part-leadtime" class="form-input" placeholder="e.g. 2-4 weeks"/>
+        </div>
+        <div class="form-group form-full">
+          <label class="form-label">Notes</label>
+          <textarea id="part-notes" class="form-input" rows="2"></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closePartnerModal()">Cancel</button>
+      <button class="btn-primary" onclick="savePartner()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Confirm delete -->
+<div class="modal-overlay" id="confirm-modal" style="display:none">
+  <div class="modal modal-sm">
+    <div class="modal-header"><h2 class="modal-title">Confirm Delete</h2></div>
+    <div class="modal-body"><p>Delete this entry? This cannot be undone.</p></div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeConfirm()">Cancel</button>
+      <button class="btn-danger" id="confirm-delete-btn">Delete</button>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}<script src="/static/js/partners.js"></script>{% endblock %}

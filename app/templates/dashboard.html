@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Dashboard</h1>
+    <p class="page-sub">Welcome back, {{ user.name }}</p>
+  </div>
+</div>
+
+<div class="stats-grid" id="stats-grid">
+  <!-- Projects card -->
+  <div class="stat-card stat-blue">
+    <div class="stat-label">Projects</div>
+    <div class="stat-row">
+      <div class="stat-block"><div class="stat-num" id="s-proj-total">–</div><div class="stat-desc">Total</div></div>
+      <div class="stat-block"><div class="stat-num" id="s-proj-ip">–</div><div class="stat-desc">In Progress</div></div>
+      <div class="stat-block"><div class="stat-num overdue" id="s-proj-od">–</div><div class="stat-desc">Overdue</div></div>
+    </div>
+    <a href="/projects" class="stat-link">View Projects →</a>
+  </div>
+
+  <!-- Partners card -->
+  <div class="stat-card stat-teal">
+    <div class="stat-label">Partners & Suppliers</div>
+    <div class="stat-row">
+      <div class="stat-block"><div class="stat-num" id="s-part-total">–</div><div class="stat-desc">Total</div></div>
+      <div class="stat-block"><div class="stat-num" id="s-part-p">–</div><div class="stat-desc">Partners</div></div>
+      <div class="stat-block"><div class="stat-num" id="s-part-s">–</div><div class="stat-desc">Suppliers</div></div>
+      <div class="stat-block"><div class="stat-num" id="s-part-o">–</div><div class="stat-desc">OEMs</div></div>
+    </div>
+    <a href="/partners" class="stat-link">View Dire

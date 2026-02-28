@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TechOps Central – {% block title %}{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/main.css"/>
+</head>
+<body>
+
+<div class="shell">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-icon">⬡</div>
+      <div>
+        <div class="brand-name">TechOps</div>
+        <div class="brand-sub">Central</div>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a href="/dashboard" class="nav-item {% if request.path == '/dashboard' %}active{% endif %}">
+        <span class="nav-icon">▦</span> Dashboard
+      </a>
+      <a href="/projects" class="nav-item {% if request.path == '/projects' %}active{% endif %}">
+        <span class="nav-icon">◈</span> Projects
+      </a>
+      <a href="/partners" class="nav-item {% if request.path == '/partners' %}active{% endif %}">
+        <span class="nav-icon">◉</span> Partners & Suppliers
+      </a>
+      <a href="/tasks" class="nav-item {% if request.path == '/tasks' %}active{% endif %}">
+        <span class="nav-icon">◧</span> Task Board
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-chip">
+        <div class="user-avatar">{{ user.name[0] }}</div>
+        <div class="user-info">
+          <div class="user-name">{{ user.name }}</div>
+          <div class="user-role">{{ user.role }}</div>
+        </div>
+      </div>
+      <a href="/logout" class="logout-btn" title="Logout">⏻</a>
+    </div>
+  </aside>
+
+  <!-- Main content -->
+  <main class="main-content">
+    {% block content %}{% endblock %}
+  </main>
+</div>
+
+<script src="/static/js/main.js"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>
