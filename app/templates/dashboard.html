@@ -42,6 +42,17 @@
     </div>
     <a href="/tasks" class="stat-link">View Board →</a>
   </div>
+
+  <!-- Proposals card -->
+  <div class="stat-card stat-purple">
+    <div class="stat-label">Proposals & Tenders</div>
+    <div class="stat-row">
+      <div class="stat-block"><div class="stat-num" id="s-prop-total">–</div><div class="stat-desc">Total</div></div>
+      <div class="stat-block"><div class="stat-num" id="s-prop-submitted">–</div><div class="stat-desc">Submitted</div></div>
+      <div class="stat-block"><div class="stat-num" id="s-prop-wr">–</div><div class="stat-desc">Win Rate %</div></div>
+    </div>
+    <a href="/proposals" class="stat-link">View Proposals →</a>
+  </div>
 </div>
 
 <script>
@@ -56,6 +67,9 @@ fetch('/api/stats').then(r=>r.json()).then(d=>{
   document.getElementById('s-task-total').textContent = d.tasks.total;
   document.getElementById('s-task-od').textContent    = d.tasks.overdue;
   document.getElementById('s-task-done').textContent  = d.tasks.done_week;
+  document.getElementById('s-prop-total').textContent     = d.proposals.total;
+  document.getElementById('s-prop-submitted').textContent = d.proposals.submitted;
+  document.getElementById('s-prop-wr').textContent        = d.proposals.win_rate + '%';
 });
 </script>
 {% endblock %}

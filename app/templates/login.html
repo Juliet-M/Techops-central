@@ -7,10 +7,25 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/static/css/main.css"/>
+  <script>
+    (function() {
+      const t = localStorage.getItem('theme') || 'light';
+      document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
 </head>
 <body class="login-body">
+
+  <!-- Dark mode toggle -->
+  <div class="theme-toggle">
+    <span class="toggle-icon" id="toggle-icon">☀️</span>
+    <div class="toggle-switch" onclick="toggleTheme()" title="Toggle dark mode"></div>
+  </div>
+
+  <!-- Background glows -->
   <div class="login-bg">
-    <div class="login-grid"></div>
+    <div class="login-glow-1"></div>
+    <div class="login-glow-2"></div>
   </div>
 
   <div class="login-wrap">
@@ -44,6 +59,18 @@
   </div>
 
   <script>
+    function toggleTheme() {
+      const html = document.documentElement;
+      const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+      document.getElementById('toggle-icon').textContent = next === 'dark' ? '🌙' : '☀️';
+    }
+    (function() {
+      const t = localStorage.getItem('theme') || 'light';
+      document.getElementById('toggle-icon').textContent = t === 'dark' ? '🌙' : '☀️';
+    })();
+
     document.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
 
     async function doLogin() {

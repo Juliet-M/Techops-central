@@ -51,9 +51,21 @@ TASKS = [
     {'id': 12, 'title': 'Backup policy documentation',   'description': 'Document backup schedules and retention policies',      'assignee': 'Alex Kim',    'priority': 'Low',    'due': '2025-06-10', 'project': 'Disaster Recovery Planning', 'column': 'To Do'},
 ]
 
-_project_id_counter = 10
-_partner_id_counter = 10
-_task_id_counter    = 13
+PROPOSALS = [
+    {'id': 1, 'title': 'Cloud Infrastructure Overhaul',  'client': 'Acme Corp',      'deadline': '2025-05-15', 'status': 'Submitted',       'author': 'Jordan Lee',  'value': 180000, 'doc_link': 'https://docs.example.com/prop-001'},
+    {'id': 2, 'title': 'ERP System Integration',         'client': 'BlueSky Ltd',    'deadline': '2025-04-30', 'status': 'Internal Review', 'author': 'Morgan Chen', 'value': 95000,  'doc_link': 'https://docs.example.com/prop-002'},
+    {'id': 3, 'title': 'Managed Security Services',      'client': 'FinSecure Bank', 'deadline': '2025-06-01', 'status': 'Drafting',        'author': 'Alex Kim',    'value': 120000, 'doc_link': 'https://docs.example.com/prop-003'},
+    {'id': 4, 'title': 'Network Refresh Programme',      'client': 'TechPrime Inc',  'deadline': '2025-03-20', 'status': 'Won',             'author': 'Riley Scott', 'value': 75000,  'doc_link': 'https://docs.example.com/prop-004'},
+    {'id': 5, 'title': 'Data Analytics Platform',        'client': 'RetailMax',      'deadline': '2025-04-10', 'status': 'Lost',            'author': 'Morgan Chen', 'value': 210000, 'doc_link': 'https://docs.example.com/prop-005'},
+    {'id': 6, 'title': 'Disaster Recovery as a Service', 'client': 'GlobalEdge',     'deadline': '2025-05-28', 'status': 'Submitted',       'author': 'Jordan Lee',  'value': 88000,  'doc_link': 'https://docs.example.com/prop-006'},
+    {'id': 7, 'title': 'DevSecOps Transformation',       'client': 'StartupXYZ',     'deadline': '2025-06-15', 'status': 'Drafting',        'author': 'Alex Kim',    'value': 55000,  'doc_link': 'https://docs.example.com/prop-007'},
+    {'id': 8, 'title': 'Hybrid Cloud Migration',         'client': 'HealthTrack',    'deadline': '2025-03-15', 'status': 'Won',             'author': 'Riley Scott', 'value': 165000, 'doc_link': 'https://docs.example.com/prop-008'},
+]
+
+_project_id_counter  = 10
+_partner_id_counter  = 10
+_task_id_counter     = 13
+_proposal_id_counter = 9
 
 # ─── Auth helpers ─────────────────────────────────────────────────────────────
 
@@ -113,6 +125,11 @@ def partners():
 @login_required
 def tasks():
     return render_template('tasks.html', user=get_current_user())
+
+@app.route('/proposals')
+@login_required
+def proposals():
+    return render_template('proposals.html', user=get_current_user())
 
 # ─── API: Projects ────────────────────────────────────────────────────────────
 
@@ -278,28 +295,84 @@ def api_delete_task(tid):
 def api_project_names():
     return jsonify([p['name'] for p in PROJECTS])
 
+# ─── API: Proposals ───────────────────────────────────────────────────────────
+
+@app.route('/api/proposals', methods=['GET'])
+@login_required
+def api_get_proposals():
+    return jsonify(PROPOSALS)
+
+@app.route('/api/proposals', methods=['POST'])
+@login_required
+def api_add_proposal():
+    global _proposal_id_counter
+    data = request.get_json()
+    proposal = {
+        'id':       _proposal_id_counter,
+        'title':    data['title'],
+        'client':   data['client'],
+        'deadline': data['deadline'],
+        'status':   data['status'],
+        'author':   data['author'],
+        'value':    float(data['value']),
+        'doc_link': data.get('doc_link', ''),
+    }
+    PROPOSALS.append(proposal)
+    _proposal_id_counter += 1
+    return jsonify(proposal), 201
+
+@app.route('/api/proposals/<int:pid>', methods=['PUT'])
+@login_required
+def api_update_proposal(pid):
+    data = request.get_json()
+    for p in PROPOSALS:
+        if p['id'] == pid:
+            p.update({
+                'title':    data['title'],
+                'client':   data['client'],
+                'deadline': data['deadline'],
+                'status':   data['status'],
+                'author':   data['author'],
+                'value':    float(data['value']),
+                'doc_link': data.get('doc_link', ''),
+            })
+            return jsonify(p)
+    return jsonify({'error': 'Not found'}), 404
+
+@app.route('/api/proposals/<int:pid>', methods=['DELETE'])
+@login_required
+def api_delete_proposal(pid):
+    global PROPOSALS
+    PROPOSALS = [p for p in PROPOSALS if p['id'] != pid]
+    return jsonify({'success': True})
+
 # ─── Dashboard stats ──────────────────────────────────────────────────────────
 
 @app.route('/api/stats', methods=['GET'])
 @login_required
 def api_stats():
-    today = datetime.date.today().isoformat()
-    total_proj   = len(PROJECTS)
-    in_progress  = sum(1 for p in PROJECTS if p['status'] == 'In Progress')
-    overdue      = sum(1 for p in PROJECTS if p['deadline'] < today and p['status'] not in ('Completed','Cancelled'))
-    total_part   = len(PARTNERS)
-    partners_cnt = sum(1 for p in PARTNERS if p['type'] == 'Partner')
-    suppliers_cnt= sum(1 for p in PARTNERS if p['type'] == 'Supplier')
-    oems_cnt     = sum(1 for p in PARTNERS if p['type'] == 'OEM')
-    total_tasks  = len(TASKS)
-    tasks_overdue= sum(1 for t in TASKS if t['due'] < today and t['column'] != 'Done')
+    today         = datetime.date.today().isoformat()
+    total_proj    = len(PROJECTS)
+    in_progress   = sum(1 for p in PROJECTS if p['status'] == 'In Progress')
+    overdue       = sum(1 for p in PROJECTS if p['deadline'] < today and p['status'] not in ('Completed','Cancelled'))
+    total_part    = len(PARTNERS)
+    partners_cnt  = sum(1 for p in PARTNERS if p['type'] == 'Partner')
+    suppliers_cnt = sum(1 for p in PARTNERS if p['type'] == 'Supplier')
+    oems_cnt      = sum(1 for p in PARTNERS if p['type'] == 'OEM')
+    total_tasks   = len(TASKS)
+    tasks_overdue = sum(1 for t in TASKS if t['due'] < today and t['column'] != 'Done')
     from datetime import date, timedelta
-    week_start = (date.today() - timedelta(days=date.today().weekday())).isoformat()
     tasks_done_week = sum(1 for t in TASKS if t['column'] == 'Done')
+    total_props   = len(PROPOSALS)
+    submitted     = sum(1 for p in PROPOSALS if p['status'] == 'Submitted')
+    won           = sum(1 for p in PROPOSALS if p['status'] == 'Won')
+    lost          = sum(1 for p in PROPOSALS if p['status'] == 'Lost')
+    win_rate      = round((won / (won + lost) * 100)) if (won + lost) > 0 else 0
     return jsonify({
-        'projects': {'total': total_proj, 'in_progress': in_progress, 'overdue': overdue},
-        'partners': {'total': total_part, 'partners': partners_cnt, 'suppliers': suppliers_cnt, 'oems': oems_cnt},
-        'tasks':    {'total': total_tasks, 'overdue': tasks_overdue, 'done_week': tasks_done_week},
+        'projects':  {'total': total_proj,  'in_progress': in_progress,  'overdue': overdue},
+        'partners':  {'total': total_part,  'partners': partners_cnt, 'suppliers': suppliers_cnt, 'oems': oems_cnt},
+        'tasks':     {'total': total_tasks, 'overdue': tasks_overdue, 'done_week': tasks_done_week},
+        'proposals': {'total': total_props, 'submitted': submitted,   'win_rate': win_rate},
     })
 
 if __name__ == '__main__':

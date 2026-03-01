@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% block title %}Proposals{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Proposal & Tender Tracker</h1>
+    <p class="page-sub">Track proposals from drafting through to outcome</p>
+  </div>
+  <button class="btn-primary" onclick="openProposalModal()">+ New Proposal</button>
+</div>
+
+<div class="toolbar">
+  <div class="filter-group">
+    <label class="filter-label">Status:</label>
+    <select id="filter-status" class="form-select" onchange="renderProposals()">
+      <option value="">All Statuses</option>
+      <option>Drafting</option><option>Internal Review</option>
+      <option>Submitted</option><option>Won</option><option>Lost</option>
+    </select>
+  </div>
+  <div class="filter-group">
+    <label class="filter-label">Sort by:</label>
+    <select id="sort-col" class="form-select" onchange="renderProposals()">
+      <option value="deadline">Deadline</option>
+      <option value="value">Value</option>
+      <option value="status">Status</option>
+    </select>
+  </div>
+</div>
+
+<div class="table-wrap">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Proposal Title</th><th>Client</th><th>Deadline</th><th>Status</th>
+        <th>Author</th><th>Value (USD)</th><th>Document</th><th>Actions</th>
+      </tr>
+    </thead>
+    <tbody id="prop-body"></tbody>
+  </table>
+</div>
+
+<div class="modal-overlay" id="proposal-modal" style="display:none">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title" id="prop-modal-title">New Proposal</h2>
+      <button class="modal-close" onclick="closeProposalModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="prop-id"/>
+      <div class="form-grid">
+        <div class="form-group form-full">
+          <label class="form-label">Proposal Title *</label>
+          <input type="text" id="prop-title" class="form-input" placeholder="e.g. Cloud Infrastructure Overhaul"/>
+          <span class="field-error" id="err-prop-title"></span>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Client *</label>
+          <input type="text" id="prop-client" class="form-input"/>
+          <span class="field-error" id="err-prop-client"></span>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Author *</label>
+          <input type="text" id="prop-author" class="form-input"/>
+          <span class="field-error" id="err-prop-author"></span>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Deadline *</label>
+          <input type="date" id="prop-deadline" class="form-input"/>
+          <span class="field-error" id="err-prop-deadline"></span>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Status *</label>
+          <select id="prop-status" class="form-select">
+            <option>Drafting</option><option>Internal Review</option>
+            <option>Submitted</option><option>Won</option><option>Lost</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Estimated Value (USD) *</label>
+          <input type="number" id="prop-value" class="form-input" placeholder="e.g. 95000" min="0"/>
+          <span class="field-error" id="err-prop-value"></span>
+        </div>
+        <div class="form-group form-full">
+          <label class="form-label">Document Link</label>
+          <input type="text" id="prop-doc" class="form-input" placeholder="https://docs.example.com/proposal"/>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeProposalModal()">Cancel</button>
+      <button class="btn-primary" onclick="saveProposal()">Save Proposal</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="confirm-modal" style="display:none">
+  <div class="modal modal-sm">
+    <div class="modal-header"><h2 class="modal-title">Confirm Delete</h2></div>
+    <div class="modal-body"><p>Delete this proposal? This cannot be undone.</p></div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeConfirm()">Cancel</button>
+      <button class="btn-danger" id="confirm-delete-btn">Delete</button>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}<script src="/static/js/proposals.js"></script>{% endblock %}
