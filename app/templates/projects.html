@@ -52,4 +52,74 @@
     <div class="modal-body">
       <input type="hidden" id="proj-id"/>
       <div class="form-grid">
-        <di
+        <div class="form-group">
+          <label class="form-label">Project Name *</label>
+          <input type="text" id="proj-name" class="form-input" placeholder="e.g. Cloud Migration Phase 2"/>
+          <span class="field-error" id="err-proj-name"></span>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Client *</label>
+          <input type="text" id="proj-client" class="form-input" placeholder="Client company name"/>
+          <span class="field-error" id="err-proj-client"></span>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Status *</label>
+          <select id="proj-status" class="form-select">
+            <option>Not Started</option><option>In Progress</option>
+            <option>On Hold</option><option>Completed</option><option>Cancelled</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Assigned Lead *</label>
+          <input type="text" id="proj-lead" class="form-input" placeholder="Name of project lead"/>
+          <span class="field-error" id="err-proj-lead"></span>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Start Date *</label>
+          <input type="date" id="proj-start" class="form-input"/>
+          <span class="field-error" id="err-proj-start"></span>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Deadline *</label>
+          <input type="date" id="proj-deadline" class="form-input"/>
+          <span class="field-error" id="err-proj-deadline"></span>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Budget (USD) *</label>
+          <input type="number" id="proj-budget" class="form-input" placeholder="e.g. 50000" min="0"/>
+          <span class="field-error" id="err-proj-budget"></span>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Progress (%) *</label>
+          <input type="number" id="proj-progress" class="form-input" placeholder="0–100" min="0" max="100"/>
+          <span class="field-error" id="err-proj-progress"></span>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeProjectModal()">Cancel</button>
+      <button class="btn-primary" onclick="saveProject()">Save Project</button>
+    </div>
+  </div>
+</div>
+
+<!-- Confirm delete -->
+<div class="modal-overlay" id="confirm-modal" style="display:none">
+  <div class="modal modal-sm">
+    <div class="modal-header">
+      <h2 class="modal-title">Confirm Delete</h2>
+    </div>
+    <div class="modal-body">
+      <p>Are you sure you want to delete this project? This action cannot be undone.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeConfirm()">Cancel</button>
+      <button class="btn-danger" id="confirm-delete-btn">Delete</button>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/projects.js"></script>
+{% endblock %}

@@ -29,4 +29,33 @@
       <div class="stat-block"><div class="stat-num" id="s-part-s">–</div><div class="stat-desc">Suppliers</div></div>
       <div class="stat-block"><div class="stat-num" id="s-part-o">–</div><div class="stat-desc">OEMs</div></div>
     </div>
-    <a href="/partners" class="stat-link">View Dire
+    <a href="/partners" class="stat-link">View Directory →</a>
+  </div>
+
+  <!-- Tasks card -->
+  <div class="stat-card stat-amber">
+    <div class="stat-label">Tasks</div>
+    <div class="stat-row">
+      <div class="stat-block"><div class="stat-num" id="s-task-total">–</div><div class="stat-desc">Total</div></div>
+      <div class="stat-block"><div class="stat-num overdue" id="s-task-od">–</div><div class="stat-desc">Overdue</div></div>
+      <div class="stat-block"><div class="stat-num" id="s-task-done">–</div><div class="stat-desc">Completed</div></div>
+    </div>
+    <a href="/tasks" class="stat-link">View Board →</a>
+  </div>
+</div>
+
+<script>
+fetch('/api/stats').then(r=>r.json()).then(d=>{
+  document.getElementById('s-proj-total').textContent = d.projects.total;
+  document.getElementById('s-proj-ip').textContent    = d.projects.in_progress;
+  document.getElementById('s-proj-od').textContent    = d.projects.overdue;
+  document.getElementById('s-part-total').textContent = d.partners.total;
+  document.getElementById('s-part-p').textContent     = d.partners.partners;
+  document.getElementById('s-part-s').textContent     = d.partners.suppliers;
+  document.getElementById('s-part-o').textContent     = d.partners.oems;
+  document.getElementById('s-task-total').textContent = d.tasks.total;
+  document.getElementById('s-task-od').textContent    = d.tasks.overdue;
+  document.getElementById('s-task-done').textContent  = d.tasks.done_week;
+});
+</script>
+{% endblock %}
